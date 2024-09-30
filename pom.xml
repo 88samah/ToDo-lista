@@ -26,7 +26,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
         <!-- Spring Boot Starter Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -39,8 +38,6 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>9.0.0</version>
         </dependency>
-
-
 
         <!-- Lombok -->
         <dependency>
@@ -62,6 +59,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
