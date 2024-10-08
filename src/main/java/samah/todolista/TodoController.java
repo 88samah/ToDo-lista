@@ -6,61 +6,59 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-// Controller för Todo-entiteter
-@RestController // Anger att detta är en REST-controller
-@RequestMapping("/todos") // Anger bas-URL för alla metoder i denna controller
+@RestController
+@RequestMapping("/api/todos")
 public class TodoController {
 
-    private final TodoRepository todoRepository;
+    private final TodoService todoService;
 
-    @Autowired // Injekterar TodoRepository via konstruktor
-    public TodoController(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
+    @Autowired
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
-    // Hämta alla Todo-element
-    @GetMapping // Hanterar GET-förfrågningar till /todos
+    // Hent alle Todos
+    @GetMapping
     public List<Todo> getAllTodos() {
-        return todoRepository.findAll(); // Returnerar en lista med alla Todo-element
+        return todoService.getAllTodos();
     }
 
-    // Hämta ett specifikt Todo-element via ID
-    @GetMapping("/{id}") // Hanterar GET-förfrågningar till /todos/{id}
+    // Hent Todo efter ID
+    @GetMapping("/{id}")
     public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
-        return todoRepository.findById(id)
-                .map(todo -> new ResponseEntity<>(todo, HttpStatus.OK)) // Returnerar 200 OK med Todo
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Returnerar 404 NOT FOUND om ej hittad
+        Optional<Todo> todo = todoService.getTodoById(id);
+        return todo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Skapa ett nytt Todo-element
-    @PostMapping // Hanterar POST-förfrågningar till /todos
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
-        Todo createdTodo = todoRepository.save(todo); // Sparar det nya Todo-elementet
-        return new ResponseEntity<>(createdTodo, HttpStatus.CREATED); // Returnerar 201 CREATED
+    // Opret en ny Todo
+    @PostMapping
+    public ResponseEntity<Todo> addTodo(@RequestBody Todo todo) {
+        Todo createdTodo = todoService.addTodo(todo); // Her kalder vi addTodo i stedet for createTodo
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTodo);
     }
 
-    // Uppdatera ett befintligt Todo-element
-    @PutMapping("/{id}") // Hanterar PUT-förfrågningar till /todos/{id}
-    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todoDetails) {
-        return todoRepository.findById(id)
-                .map(todo -> {
-                    todo.setTitle(todoDetails.getTitle()); // Uppdaterar titel
-                    todo.setCompleted(todoDetails.isCompleted()); // Uppdaterar status
-                    Todo updatedTodo = todoRepository.save(todo); // Sparar ändringarna
-                    return new ResponseEntity<>(updatedTodo, HttpStatus.OK); // Returnerar 200 OK med uppdaterad Todo
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Returnerar 404 NOT FOUND om ej hittad
+    // Opdater en eksisterende Todo
+    @PutMapping("/{id}")
+    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
+        Todo updated = todoService.updateTodo(id, updatedTodo);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);  // Hvis opdatering lykkes
+        } else {
+            return ResponseEntity.notFound().build();  // Hvis Todo med det id ikke findes
+        }
     }
 
-    // Ta bort ett Todo-element
-    @DeleteMapping("/{id}") // Hanterar DELETE-förfrågningar till /todos/{id}
+
+    // Slet en Todo
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
-        return todoRepository.findById(id)
-                .map(todo -> {
-                    todoRepository.delete(todo); // Tar bort Todo-elementet
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT); // Returnerar 204 NO CONTENT
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Returnerar 404 NOT FOUND om ej hittad
+        boolean deleted = todoService.deleteTodo(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

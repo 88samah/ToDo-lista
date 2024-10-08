@@ -1,10 +1,10 @@
 package samah.todolista;
-
-
+;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 
 @Data
@@ -24,6 +24,4 @@ public class Todo {
 
     private boolean completed;
 
-    // Optional: Du kan tilføje en due date, hvis du ønsker det
-    // private LocalDate dueDate;
 }

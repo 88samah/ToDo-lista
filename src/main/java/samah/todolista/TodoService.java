@@ -1,40 +1,60 @@
 package samah.todolista;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor // Genererar en konstruktor med alla 'final'-fält
 public class TodoService {
 
+    // Injektion af TodoRepository
     private final TodoRepository todoRepository;
 
-    // Hämta alla Todo-element
+    @Autowired
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+    // Hent alle Todo's
     public List<Todo> getAllTodos() {
-        return todoRepository.findAll();
+        return todoRepository.findAll();  // Brug todoRepository til at hente alle todos fra databasen
     }
 
-    // Hämta en Todo efter ID
+    // Hent Todo efter ID
     public Optional<Todo> getTodoById(Long id) {
-        return todoRepository.findById(id);
+        return todoRepository.findById(id);  // Brug todoRepository til at finde todo med ID
     }
 
-    // Skapa en ny Todo
-    public Todo createTodo(Todo todo) {
-        return todoRepository.save(todo);
+    // Opret en ny Todo
+    public Todo addTodo(Todo todo) {
+        return todoRepository.save(todo);  // Gem todo i databasen via todoRepository
     }
 
-    // Uppdatera en befintlig Todo
+    // Opdater en eksisterende Todo
     public Todo updateTodo(Long id, Todo updatedTodo) {
-        updatedTodo.setId(id);
-        return todoRepository.save(updatedTodo);
+        Optional<Todo> existingTodo = todoRepository.findById(id);  // Find Todo efter id
+        if (existingTodo.isPresent()) {
+            Todo todo = existingTodo.get();
+            todo.setTitle(updatedTodo.getTitle());
+            todo.setDescription(updatedTodo.getDescription());
+            todo.setCompleted(updatedTodo.isCompleted());
+            return todoRepository.save(todo);  // Gem opdaterede Todo
+        } else {
+            return null;  // Hvis Todo ikke findes, returnér null
+        }
     }
 
-    // Ta bort en Todo
-    public void deleteTodo(Long id) {
-        todoRepository.deleteById(id);
+
+    // Slet en Todo efter ID
+    public boolean deleteTodo(Long id) {
+        Optional<Todo> todo = todoRepository.findById(id);
+        if (todo.isPresent()) {
+            todoRepository.deleteById(id);  // Slet todo fra databasen
+            return true;
+        } else {
+            return false;  // Returnér false hvis todo ikke findes
+        }
     }
 }
