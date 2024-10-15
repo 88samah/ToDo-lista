@@ -21,14 +21,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
-
-      - name: Run JUnit tests
-        run: mvn test
-
-      - name: Deploy to AWS Elastic Beanstalk
-        run: |
-          aws elasticbeanstalk create-application-version --application-name your-app-name --version-label your-version --source-bundle S3Bucket=your-bucket-name,S3Key=your-app.jar
-          aws elasticbeanstalk update-environment --environment-name your-env-name --version-label your-version
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
