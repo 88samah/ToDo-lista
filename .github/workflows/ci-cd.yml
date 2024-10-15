@@ -1,38 +1,33 @@
-name: CI/CD Pipeline
+name: Build and Deploy to AWS
 
-# När en push görs till master eller när en pull request skapas till master-grenen
 on:
   push:
     branches:
-      - master   # Utlöses vid push till master-grenen
-  pull_request:
-    branches:
-      - master   # Utlöses när en pull request skapas mot master-grenen
+      - master # Körde workflow när du pushar till master
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Kört på en Ubuntu-maskin
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2  # Klonar koden från ditt repository
+      - name: Checkout repositorygit
+        uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up Java JDK 20
         uses: actions/setup-java@v2
         with:
-          java-version: '20'  # Sätt Java-versionen (samma som lokalt)
+          java-version: '20'
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests  # Bygger applikationen med Maven (utan att köra tester)
+        run: mvn clean install
 
-      - name: Run tests
-        run: mvn test  # Kör testerna
+      - name: Run JUnit tests
+        run: mvn test
 
-      # Här laddar vi upp den byggda JAR-filen till AWS S3
-      - name: Upload JAR to AWS S3
+      - name: Deploy to AWS Elastic Beanstalk
         run: |
-          aws s3 cp target/todolist-0.0.1-SNAPSHOT.jar s3://todolist-bucket/my-app.jar
+          aws elasticbeanstalk create-application-version --application-name your-app-name --version-label your-version --source-bundle S3Bucket=your-bucket-name,S3Key=your-app.jar
+          aws elasticbeanstalk update-environment --environment-name your-env-name --version-label your-version
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Min AWS access key
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Min AWS secret key
-          AWS_DEFAULT_REGION: "us-east-1"  # Min AWS-region
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
