@@ -9,7 +9,6 @@ import java.util.Optional;
 @Service
 public class TodoService {
 
-    // Injektion af TodoRepository
     private final TodoRepository todoRepository;
 
     @Autowired
@@ -17,44 +16,44 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    // Hent alle Todo's
+    // Hent alle todo-opgaver
     public List<Todo> getAllTodos() {
-        return todoRepository.findAll();  // Brug todoRepository til at hente alle todos fra databasen
+        return todoRepository.findAll();
     }
 
-    // Hent Todo efter ID
+    // Hent todo-opgave efter ID
     public Optional<Todo> getTodoById(Long id) {
-        return todoRepository.findById(id);  // Brug todoRepository til at finde todo med ID
+        return todoRepository.findById(id);
     }
 
-    // Opret en ny Todo
-    public Todo addTodo(Todo todo) {
-        return todoRepository.save(todo);  // Gem todo i databasen via todoRepository
+    // Opret en ny todo-opgave
+    public Todo createTodo(Todo todo) {
+        return todoRepository.save(todo);
     }
 
-    // Opdater en eksisterende Todo
+    // Opdater en eksisterende todo-opgave
     public Todo updateTodo(Long id, Todo updatedTodo) {
-        Optional<Todo> existingTodo = todoRepository.findById(id);  // Find Todo efter id
-        if (existingTodo.isPresent()) {
-            Todo todo = existingTodo.get();
-            todo.setTitle(updatedTodo.getTitle());
-            todo.setDescription(updatedTodo.getDescription());
-            todo.setCompleted(updatedTodo.isCompleted());
-            return todoRepository.save(todo);  // Gem opdaterede Todo
+        Optional<Todo> existingTodoOpt = todoRepository.findById(id);
+
+        if (existingTodoOpt.isPresent()) {
+            Todo existingTodo = existingTodoOpt.get();
+            existingTodo.setTitle(updatedTodo.getTitle());
+            existingTodo.setDescription(updatedTodo.getDescription());
+            existingTodo.setCompleted(updatedTodo.isCompleted());
+            return todoRepository.save(existingTodo);
         } else {
-            return null;  // Hvis Todo ikke findes, returnér null
+            throw new RuntimeException("Todo not found with id: " + id);
         }
     }
 
 
-    // Slet en Todo efter ID
+    // Ta bort en todo-uppgift
     public boolean deleteTodo(Long id) {
-        Optional<Todo> todo = todoRepository.findById(id);
-        if (todo.isPresent()) {
-            todoRepository.deleteById(id);  // Slet todo fra databasen
+        if (todoRepository.existsById(id)) {
+            todoRepository.deleteById(id);
             return true;
         } else {
-            return false;  // Returnér false hvis todo ikke findes
+            throw new RuntimeException("Todo not found with id: " + id);
         }
     }
 }

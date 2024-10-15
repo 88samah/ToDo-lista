@@ -19,39 +19,42 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    // Hent alle Todos
+    // Hämta alla Todos
     @GetMapping
-    public List<Todo> getAllTodos() {
-        return todoService.getAllTodos();
+    public ResponseEntity<List<Todo>> getAllTodos() {
+        List<Todo> todos = todoService.getAllTodos();
+        if (todos.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Returnera 204 No Content om det inte finns någon data
+        }
+        return ResponseEntity.ok(todos);
     }
 
-    // Hent Todo efter ID
+    // Hämta Todo efter ID
     @GetMapping("/{id}")
     public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
         Optional<Todo> todo = todoService.getTodoById(id);
         return todo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Opret en ny Todo
+    // skapa en ny Todo
     @PostMapping
     public ResponseEntity<Todo> addTodo(@RequestBody Todo todo) {
-        Todo createdTodo = todoService.addTodo(todo); // Her kalder vi addTodo i stedet for createTodo
+        Todo createdTodo = todoService.createTodo(todo);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTodo);
     }
 
-    // Opdater en eksisterende Todo
+    // Uppdatera en befintlig Todo
     @PutMapping("/{id}")
     public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
         Todo updated = todoService.updateTodo(id, updatedTodo);
         if (updated != null) {
-            return ResponseEntity.ok(updated);  // Hvis opdatering lykkes
+            return ResponseEntity.ok(updated);
         } else {
-            return ResponseEntity.notFound().build();  // Hvis Todo med det id ikke findes
+            return ResponseEntity.notFound().build();
         }
     }
 
-
-    // Slet en Todo
+    // ta bort en Todo
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
         boolean deleted = todoService.deleteTodo(id);

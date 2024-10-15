@@ -31,8 +31,8 @@ jobs:
       # Här laddar vi upp den byggda JAR-filen till AWS S3
       - name: Upload JAR to AWS S3
         run: |
-          aws s3 cp target/your-app.jar s3://your-s3-bucket/your-app.jar
+          aws s3 cp target/todolist-0.0.1-SNAPSHOT.jar s3://todolist-bucket/my-app.jar
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Din AWS access nyckel
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Din AWS hemliga nyckel
-          AWS_DEFAULT_REGION: "us-east-1"  # AWS-region (ändra till din region)
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Min AWS access key
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Min AWS secret key
+          AWS_DEFAULT_REGION: "us-east-1"  # Min AWS-region

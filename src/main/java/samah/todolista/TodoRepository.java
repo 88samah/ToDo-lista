@@ -3,7 +3,8 @@ package samah.todolista;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface TodoRepository extends JpaRepository<Todo, Long> {
+import java.util.List;
 
+public interface TodoRepository extends JpaRepository<Todo, Long> {
+    List<Todo> findAll();
 }
