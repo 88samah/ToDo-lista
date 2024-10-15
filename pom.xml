@@ -112,8 +112,15 @@
         </dependency>
 
     </dependencies>
-
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering> <!-- Dette deaktiverer filtrering af resources -->
+            </resource>
+        </resources>
+
+        <!-- Plugins sektionen -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
