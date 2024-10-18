@@ -1,0 +1,96 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Todo</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">samah.todolista</a>
+</div>
+
+<h1>Coverage Summary for Class: Todo (samah.todolista)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Todo</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package samah.todolista;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;@Data
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;todos&quot;) // Mappas till &quot;todos&quot; tabellen i databasen
+&nbsp;public class Todo {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY) // Genererar ett unikt ID för varje nytt inlägg
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Column(name = &quot;title&quot;) // Mappas till kolumnen &quot;description&quot; i databasen
+&nbsp;
+&nbsp;    private String title;
+&nbsp;
+&nbsp;    @Column(name = &quot;description&quot;) // Mappas till kolumnen &quot;description&quot; i databasen
+&nbsp;    private String description;
+&nbsp;
+&nbsp;    @Column(name = &quot;completed&quot;) // Mappas till kolonnen &quot;completed&quot; i databasen
+&nbsp;    private boolean completed;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-10-18 15:13</div>
+</div>
+</body>
+</html>

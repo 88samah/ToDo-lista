@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class TodoService {
 
@@ -16,22 +17,22 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    // Hent alle todo-opgaver
+    // Hämta alla todo-uppgifter
     public List<Todo> getAllTodos() {
         return todoRepository.findAll();
     }
 
-    // Hent todo-opgave efter ID
+    // Hämta todo-uppgifter efter ID
     public Optional<Todo> getTodoById(Long id) {
         return todoRepository.findById(id);
     }
 
-    // Opret en ny todo-opgave
+    // skapa en ny todo-uppgift
     public Todo createTodo(Todo todo) {
         return todoRepository.save(todo);
     }
 
-    // Opdater en eksisterende todo-opgave
+    // uppdatera  en eksisterende todo-uppgift
     public Todo updateTodo(Long id, Todo updatedTodo) {
         Optional<Todo> existingTodoOpt = todoRepository.findById(id);
 
