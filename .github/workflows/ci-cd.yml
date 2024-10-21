@@ -1,6 +1,9 @@
 name: Super-Linter
 
-on: push
+on: 
+  push:
+    branches:
+      - master
 
 jobs:
   super-lint:
@@ -13,6 +16,5 @@ jobs:
       - name: Run Super-Linter
         uses: github/super-linter@v4
         env:
-          DEFAULT_BRANCH: master  # Holder master som standardgren
+          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # LINTER_RULES_PATH: .github/linter.yml # Valgfrit, hvis du har specifikke regler
